@@ -8,8 +8,10 @@ pragma solidity 0.8.13;
 */
 contract transactions {
 
+    uint private transactionCount;
+
     // Estructura de registro de la transaccion en la Blockachain.
-    struct register{
+    struct Register{
         // Dirreccion de wallet que envia.
         address sender;
         // Direccion de wallet que recibe.
@@ -17,23 +19,39 @@ contract transactions {
         // Cantidad a enviar al receiver.
         uint amount;
         // Mensage a enviar
-        string menssage;
+        string messager;
         // (Posible registro de numero de bloques)
     }
+    
     // Guardar en un array cada registro (Posible cambios).
-    register[] registers;
+    Register[] register;
 
     // Eventos de cada transaccion en la Blockchain.
+    event Transaction(address indexed from,address indexed receiver,uint amount, string messager);
 
-    // Manejos de errores.
+    // Evento de obtener los registros
+    event Registers();
+
+    // Evento de eliminar los registros
+    event DeleteRegister();
 
     // Funcion de hacer transaccion.
+    function addRegistred(address _receiver, uint _amount, string memory _messager) public {
+        transactionCount += 1;
+        register.push(Register(msg.sender,_receiver,_amount,_messager));
+        emit Transaction(msg.sender, _receiver, _amount, _messager);
+    }
 
     // Funcion obtener todos los registros.
-
-    // Funcion obtener registros por indices.
+    function getRegistreALl() view public returns (Register[] memory) {
+        emit Registers();
+        return register;
+    }
 
     // Funcion eliminar elementos de arrays(Todo).
-
+    function deleteArryElement() public {
+        emit DeleteRegister();
+        delete register;
+    }
 
 }
