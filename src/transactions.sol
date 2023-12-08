@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.13;
 
+import "/";
 
 /*
     Smart Contract para obtener registros de transacciones en la blockchain.
 */
-contract transactions {
+contract transactions is Ownable{
 
     uint private transactionCount;
 
@@ -42,7 +43,7 @@ contract transactions {
     }
 
     // Funcion eliminar elementos de arrays(Todo).
-    function deleteArryElement() public {
+    function deleteArryElement() public onlyOwner{
         delete register;
     }
 
