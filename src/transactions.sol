@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.13;
 
-// Importar owner.
 
 /*
     Smart Contract para obtener registros de transacciones en la blockchain.
@@ -29,11 +28,6 @@ contract transactions {
     // Eventos de cada transaccion en la Blockchain.
     event Transaction(address indexed from,address indexed receiver,uint amount, string messager);
 
-    // Evento de obtener los registros
-    event Registers();
-
-    // Evento de eliminar los registros
-    event DeleteRegister();
 
     // Funcion de hacer transaccion.
     function addRegistred(address _receiver, uint _amount, string memory _messager) public {
@@ -44,13 +38,11 @@ contract transactions {
 
     // Funcion obtener todos los registros.
     function getRegistreALl() view public returns (Register[] memory) {
-        emit Registers();
         return register;
     }
 
     // Funcion eliminar elementos de arrays(Todo).
     function deleteArryElement() public {
-        emit DeleteRegister();
         delete register;
     }
 
