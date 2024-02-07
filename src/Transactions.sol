@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.13;
+pragma solidity ^0.8.13;
 
-import "/";
+import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 /*
     Smart Contract para obtener registros de transacciones en la blockchain.
 */
-contract transactions is Ownable{
+contract transactions is Ownable(msg.sender){
 
     uint private transactionCount;
 
@@ -19,7 +19,6 @@ contract transactions is Ownable{
         uint amount;
         // Mensage a enviar
         string messager;
-        // (Posible registro de numero de bloques)
     }
     
     // Guardar en un array cada registro (Posible cambios).
@@ -36,13 +35,27 @@ contract transactions is Ownable{
         emit Transaction(msg.sender, _receiver, _amount, _messager);
     }
 
+    function getRegister(uint8 _index) public view returns (Register memory){
+        return register[_index];
+    }
+
     // Funcion obtener todos los registros.
-    function getRegistreALl() view public returns (Register[] memory) {
+    function getRegistreAll() public view returns (Register[] memory) {
         return register;
     }
 
+    function deleteArrayElement(uint8 _index) public onlyOwner {
+         require(_index < register.length, "Invalid index"); 
+
+         for (uint i = _index; i < register.length - 1; i++) {
+          register[i] = register[i + 1];
+         }
+         register.pop();
+    }
+
+
     // Funcion eliminar elementos de arrays(Todo).
-    function deleteArryElement() public onlyOwner{
+    function deleteArrayElementAll() public onlyOwner{
         delete register;
     }
 
