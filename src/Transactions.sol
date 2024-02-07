@@ -2,7 +2,6 @@
 pragma solidity 0.8.13;
 
 import "/";
-
 /*
     Smart Contract para obtener registros de transacciones en la blockchain.
 */

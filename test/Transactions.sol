@@ -9,8 +9,6 @@ contract transactionsTest is Test {
 
     function setUp() public {
         transactions = new Transactions();
-
+    
     }
-
-
 }
