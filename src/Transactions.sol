@@ -1,62 +1,62 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 /*
     Smart Contract para obtener registros de transacciones en la blockchain.
 */
-contract transactions is Ownable(msg.sender){
+contract transactions is Ownable(msg.sender) {
+    error transactionError(string Error);
 
     uint private transactionCount;
 
-    // Estructura de registro de la transaccion en la Blockachain.
-    struct Register{
-        // Dirreccion de wallet que envia.
+    struct Register {
         address sender;
-        // Direccion de wallet que recibe.
         address receiver;
-        // Cantidad a enviar al receiver.
         uint amount;
-        // Mensage a enviar
         string messager;
     }
-    
-    // Guardar en un array cada registro (Posible cambios).
+
     Register[] register;
 
-    // Eventos de cada transaccion en la Blockchain.
-    event Transaction(address indexed from,address indexed receiver,uint amount, string messager);
+    event Transaction(
+        address indexed from,
+        address indexed receiver,
+        uint amount,
+        string messager
+    );
 
-
-    // Funcion de hacer transaccion.
-    function addRegistred(address _receiver, uint _amount, string memory _messager) public {
+    function addRegistred(
+        address _receiver,
+        uint _amount,
+        string memory _messager
+    ) public {
         transactionCount += 1;
-        register.push(Register(msg.sender,_receiver,_amount,_messager));
+        register.push(Register(msg.sender, _receiver, _amount, _messager));
         emit Transaction(msg.sender, _receiver, _amount, _messager);
     }
 
-    function getRegister(uint8 _index) public view returns (Register memory){
+    function getRegister(uint8 _index) public view returns (Register memory) {
+        require(_index < register.length, "Invalid index");
         return register[_index];
     }
 
-    // Funcion obtener todos los registros.
     function getRegistreAll() public view returns (Register[] memory) {
+        require(_index < register.length, "Invalid index"); 
         return register;
     }
 
     function deleteArrayElement(uint8 _index) public onlyOwner {
-         require(_index < register.length, "Invalid index"); 
+        require(_index < register.length, "Invalid index");
 
-         for (uint i = _index; i < register.length - 1; i++) {
-          register[i] = register[i + 1];
-         }
-         register.pop();
+        for (uint i = _index; i < register.length - 1; i++) {
+            register[i] = register[i + 1];
+        }
+        register.pop();
     }
 
-
-    // Funcion eliminar elementos de arrays(Todo).
-    function deleteArrayElementAll() public onlyOwner{
+    function deleteArrayElementAll() public onlyOwner {
+        require(_index < register.length, "Invalid index");
         delete register;
     }
-
 }

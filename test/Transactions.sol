@@ -18,7 +18,7 @@ contract transactionsTest is Test {
     }
 
     function testAddRegistred() public {
-        transactions.addRegistred();
+        transactions.addRegistred(address(),55,"Test add Registred");
         assertEq(a, b);
     }
 

@@ -1,0 +1,7 @@
+{
+    "projectName": "Transactions",
+    "namespace": "Transactions.Contracts",
+    "lang": 0,
+    "autoCodeGen": true,
+    "projectPath": "../"
+}
