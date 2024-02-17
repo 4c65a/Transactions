@@ -8,21 +8,28 @@ import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 //////////////////////////////////////////////////////////////*/
 
 /**
- * @author  Leandro.
- * @title   Transactions in Blockachain.
+ * @title   Transactions in Blockchain.
  * @notice  Practice project.
+ * @author  Leandro
  */
 contract Transactions is Ownable {
 
-    // Count the quantity of transaction.
+    // Count the quantity of transactions.
     uint private transactionCount;
-    uint16 public amountEther;
 
+    // Amount of ether allowed per transaction.
+    uint16 private amountEther;
+
+    /**
+     * @dev Constructor to initialize the contract.
+     * @param _proprietor The address of the contract proprietor.
+     * @param _amountEther The initial amount of ether allowed per transaction.
+     */
     constructor(address _proprietor, uint16 _amountEther) Ownable(_proprietor) {
         amountEther = _amountEther;
     }
 
-    // Register structure of each transactions
+    // Register structure for each transaction.
     struct Register {
         address sender;
         address receiver;
@@ -32,7 +39,7 @@ contract Transactions is Ownable {
 
     Register[] register;
 
-    // Event log transaction between two addresses with amount and message.
+    // Event for logging transactions between two addresses with amount and message.
     event Transaction(
         address indexed from,
         address indexed receiver,
@@ -40,7 +47,29 @@ contract Transactions is Ownable {
         string messager
     );
 
-    // Add a new transaction to the register
+    /**
+     * @notice Get the current amount of ether allowed per transaction.
+     * @return The amount of ether as a uint16.
+     */
+    function getAmountEther() public view returns (uint16) {
+        return amountEther;
+    }
+
+    /**
+     * @notice Set the amount of ether allowed per transaction.
+     * @param _amountEther The new amount of ether as a uint16.
+     * @dev Only callable by the owner of the contract.
+     */
+    function setAmountEther(uint16 _amountEther) public onlyOwner {
+        amountEther = _amountEther;
+    }
+
+    /**
+     * @notice Add a new transaction to the register.
+     * @param _receiver The address of the transaction receiver.
+     * @param _amount The amount of ether sent in the transaction.
+     * @param _messager The message associated with the transaction.
+     */
     function addRegistred(
         address _receiver,
         uint _amount,
@@ -52,18 +81,29 @@ contract Transactions is Ownable {
         emit Transaction(msg.sender, _receiver, _amount, _messager);
     }
 
-    // Get a specific transaction by index
+    /**
+     * @notice Get a specific transaction by index.
+     * @param _index The index of the transaction to retrieve.
+     * @return The transaction details as a Register struct.
+     */
     function getRegister(uint8 _index) public view returns (Register memory) {
         require(_index < register.length, "Invalid index");
         return register[_index];
     }
 
-    // Get all transactions
+    /**
+     * @notice Get all transactions.
+     * @return An array containing all transactions.
+     */
     function getAllTransactions() public view returns (Register[] memory) {
         return register;
     }
 
-    // Delete a transaction by index
+    /**
+     * @notice Delete a transaction by index.
+     * @param _index The index of the transaction to delete.
+     * @dev Only callable by the owner of the contract.
+     */
     function deleteTransaction(uint8 _index) public onlyOwner {
         require(_index < register.length, "Invalid index");
         for (uint i = _index; i < register.length - 1; i++) {
