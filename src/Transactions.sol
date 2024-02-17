@@ -2,9 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
-/*
-    Smart Contract para obtener registros de transacciones en la blockchain.
-*/
+
 contract transactions is Ownable(msg.sender) {
     error transactionError(string Error);
 
@@ -36,13 +34,17 @@ contract transactions is Ownable(msg.sender) {
         emit Transaction(msg.sender, _receiver, _amount, _messager);
     }
 
-    function getRegister(uint8 _index) public view returns (Register memory) {
+    function getRegistre(
+        uint8 _index
+    ) public view returns (Register memory) {
         require(_index < register.length, "Invalid index");
         return register[_index];
     }
 
-    function getRegistreAll() public view returns (Register[] memory) {
-        require(_index < register.length, "Invalid index"); 
+    function getRegistreAll(
+        uint8 _index
+    ) public view returns (Register[] memory) {
+        require(_index < register.length, "Invalid index");
         return register;
     }
 
@@ -55,7 +57,7 @@ contract transactions is Ownable(msg.sender) {
         register.pop();
     }
 
-    function deleteArrayElementAll() public onlyOwner {
+    function deleteArrayElementAll(uint8 _index) public onlyOwner {
         require(_index < register.length, "Invalid index");
         delete register;
     }
