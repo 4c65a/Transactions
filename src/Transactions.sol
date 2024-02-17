@@ -12,20 +12,17 @@ import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
  * @title   Transactions in Blockachain.
  * @notice  Practice project.
  */
-contract transactions is Ownable{
+contract Transactions is Ownable {
 
-    /// Count the quantity of transaction.
+    // Count the quantity of transaction.
     uint private transactionCount;
     uint16 public amountEther;
-    
 
-
-    constructor(address _proprietor, uint16 _amountEther) Ownable(_proprietor){
+    constructor(address _proprietor, uint16 _amountEther) Ownable(_proprietor) {
         amountEther = _amountEther;
     }
 
-
-    /// Register structure of each transactions
+    // Register structure of each transactions
     struct Register {
         address sender;
         address receiver;
@@ -35,7 +32,7 @@ contract transactions is Ownable{
 
     Register[] register;
 
-    /// Event log transaction between tow addresses with amount and menssage.
+    // Event log transaction between two addresses with amount and message.
     event Transaction(
         address indexed from,
         address indexed receiver,
@@ -43,74 +40,35 @@ contract transactions is Ownable{
         string messager
     );
 
-
-    /**
-     * @notice  .
-     * @dev     .
-     * @param   _receiver  .
-     * @param   _amount  .
-     * @param   _messager  .
-     */
+    // Add a new transaction to the register
     function addRegistred(
         address _receiver,
         uint _amount,
         string memory _messager
     ) public {
         transactionCount += 1;
-
         register.push(Register(msg.sender, _receiver, _amount, _messager));
-
         require(_amount >= amountEther, "Insufficient amount of ether");
-
         emit Transaction(msg.sender, _receiver, _amount, _messager);
-
     }
 
-    /**
-     * @notice  .
-     * @dev     .
-     * @param   _index  .
-     * @return  Register  .
-     */
-    function getRegistre(uint8 _index) public view returns (Register memory) {
+    // Get a specific transaction by index
+    function getRegister(uint8 _index) public view returns (Register memory) {
         require(_index < register.length, "Invalid index");
         return register[_index];
     }
 
-    /**
-     * @notice  .
-     * @dev     .
-     * @param   _index  .
-     * @return  Register[]  .
-     */
-    function getRegistreAll(
-        uint8 _index
-    ) public view returns (Register[] memory) {
-        require(_index < register.length, "Invalid index");
+    // Get all transactions
+    function getAllTransactions() public view returns (Register[] memory) {
         return register;
     }
 
-    /**
-     * @notice  .
-     * @dev     .
-     * @param   _index  .
-     */
-    function deleteArrayElement(uint8 _index) public onlyOwner {
+    // Delete a transaction by index
+    function deleteTransaction(uint8 _index) public onlyOwner {
         require(_index < register.length, "Invalid index");
-
         for (uint i = _index; i < register.length - 1; i++) {
             register[i] = register[i + 1];
         }
         register.pop();
-    }
-
-    /**
-     * @notice  .
-     * @dev     .
-     * @param   _index  .
-     */
-    function deleteArrayElementAll(uint8 _index) public onlyOwner {
-        require(_index < register.length, "Invalid index");
-        delete register;
     }
 }
