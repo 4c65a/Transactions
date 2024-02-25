@@ -38,5 +38,4 @@ contract transactionsTest is Test {
 
     function testDeleteTransaction() public {}
 
-    function testDeleteArrayElement() public {}
 }
