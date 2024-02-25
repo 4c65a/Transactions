@@ -12,18 +12,31 @@ contract transactionsTest is Test {
         transactions = new transactions();
 
         register.sender = msg.sender;
-        register.receiver = address(0xb498951524f87a4162e447e6eea3879b244e31efdbb399b2416d903a17ad5a5f);
+        register.receiver = address(
+            0xb498951524f87a4162e447e6eea3879b244e31efdbb399b2416d903a17ad5a5f
+        );
         register.amount = 55;
         register.messager = "Test of smart contract";
     }
 
+    function TestGetAmountEther() {
+        
+    }
+
     function testAddRegistred() public {
-        transactions.addRegistred(address(),55,"Test add Registred");
+        transactions.addRegistred(address(), 55, "Test add Registred");
         assertEq(a, b);
     }
 
-    function testGetRegistreAll() public {}
+    function testSetAmountEther() public {}
+
+    function testGetRegister() public {}
+
+    function testAddRegister() public {}
+
+    function testGetAllTransactions() public {}
+
+    function testDeleteTransaction() public {}
 
     function testDeleteArrayElement() public {}
-    
 }
