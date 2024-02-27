@@ -7,9 +7,9 @@ import "forge-std/Vm.sol";
 import {Transactions} from "../src/Transactions.sol";
 
 /*//////////////////////////////////////////////////////////////
-                        Test of Transactions 
+                    Test of Transactions 
 //////////////////////////////////////////////////////////////*/
-contract transactionsTest is Test {
+contract TransactionsTest is Test {
     Transactions public transactions;
 
     function setUp() public {
@@ -20,12 +20,28 @@ contract transactionsTest is Test {
     function TestGetAmountEther() public {
         uint16 expectedValue = transactions.getAmountEther();
         assertEq(expectedValue, 100, "Amount ether should match initial value");
-    }
+    } 
 
-    function testAddRegistred() public {
-        //transactions = new Transactions(msg.sender, 100);
-        //address alice = address(1);
-        //transactions.addRegistred(alice, 10, "Hello");
+    function testAddTransactions() public {
+        transactions = new Transactions(msg.sender, 10);
+        address lucy = address(1);
+        address jonh = address(2);
+        address alice = address(3);
+
+        vm.startPrank(jonh);
+        vm.expectRevert("Insufficient amount of ether");
+        transactions.addTransactions(jonh,lucy, 0, "Hello Lucy");
+        vm.stopPrank();
+
+       
+        
+
+        vm.startPrank(alice);
+        vm.expectEmit(true, true, true,true);
+        emit Transactions.transactionEvent(alice, lucy, 100, "Hello Lucy");
+        transactions.addTransactions(alice,lucy, 100, "Hello Lucy");
+        vm.stopPrank();
+
     }
 
     // Change quantities of ETH > 100 ETH to 200 ETH
@@ -35,13 +51,12 @@ contract transactionsTest is Test {
         assertEq(expectedValue, 100, "Amount ether should match initial value");
 
         // Defines a non-owner address.
-        address nonOwner = address(0x1);
+        address lucy = address(0x1);
 
         // Simulates a transaction from the non-owner address.
-        vm.prank(nonOwner); 
+        vm.prank(lucy); 
         bool didRevert = false;
         
-        // Attempts to withdraw from the EtherWallet as a non-owner.
         try transactions.setAmountEther(200) {
             // This block should not execute as the transaction should revert.
         } catch {
@@ -49,7 +64,7 @@ contract transactionsTest is Test {
             didRevert = true;
         }
        
-        assertTrue(didRevert, "");
+        assertTrue(didRevert, "The function should revert");
 
         vm.startPrank(address(msg.sender));
         transactions.setAmountEther(200);
@@ -58,7 +73,9 @@ contract transactionsTest is Test {
         assertEq(newAmount, 200, "Amount ether should match initial value");
     }
 
-    function testGetRegister() public {}
+    function testGetTransactions() public {
+
+    }
 
     function testGetAllTransactions() public {}
 

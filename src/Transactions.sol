@@ -33,13 +33,13 @@ contract Transactions is Ownable {
         address sender;
         address receiver;
         uint256 amount;
-        string messager;
+        string message;
     }
 
     Register[] register;
 
     // Event for logging transactions between two addresses with amount and message.
-    event Transaction(address indexed from, address indexed receiver, uint256 amount, string messager);
+    event  transactionEvent(address indexed from, address indexed receiver, uint256 amount, string message);
 
     /**
      * @notice Get the current amount of ether allowed per transaction.
@@ -60,15 +60,16 @@ contract Transactions is Ownable {
 
     /**
      * @notice Add a new transaction to the register.
+     * @param _sender The address of the transaction sender.
      * @param _receiver The address of the transaction receiver.
      * @param _amount The amount of ether sent in the transaction.
-     * @param _messager The message associated with the transaction.
+     * @param _message The message associated with the transaction.
      */
-    function addRegistred(address _receiver, uint256 _amount, string memory _messager) public {
+    function addTransactions(address _sender,address _receiver, uint256 _amount, string memory _message) public {
         transactionCount += 1;
-        register.push(Register(msg.sender, _receiver, _amount, _messager));
+        register.push(Register(_sender, _receiver, _amount, _message));
         require(_amount >= amountEther, "Insufficient amount of ether");
-        emit Transaction(msg.sender, _receiver, _amount, _messager);
+        emit transactionEvent(_sender, _receiver, _amount, _message);
     }
 
     /**
@@ -76,7 +77,7 @@ contract Transactions is Ownable {
      * @param _index The index of the transaction to retrieve.
      * @return The transaction details as a Register struct.
      */
-    function getRegister(uint8 _index) public view returns (Register memory) {
+    function getTransactions(uint8 _index) public view returns (Register memory) {
         require(_index < register.length, "Invalid index");
         return register[_index];
     }
