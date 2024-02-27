@@ -13,9 +13,8 @@ import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
  * @author  Leandro
  */
 contract Transactions is Ownable {
-
     // Count the quantity of transactions.
-    uint private transactionCount;
+    uint256 private transactionCount;
 
     // Amount of ether allowed per transaction.
     uint16 private amountEther;
@@ -33,19 +32,14 @@ contract Transactions is Ownable {
     struct Register {
         address sender;
         address receiver;
-        uint amount;
+        uint256 amount;
         string messager;
     }
 
     Register[] register;
 
     // Event for logging transactions between two addresses with amount and message.
-    event Transaction(
-        address indexed from,
-        address indexed receiver,
-        uint amount,
-        string messager
-    );
+    event Transaction(address indexed from, address indexed receiver, uint256 amount, string messager);
 
     /**
      * @notice Get the current amount of ether allowed per transaction.
@@ -70,11 +64,7 @@ contract Transactions is Ownable {
      * @param _amount The amount of ether sent in the transaction.
      * @param _messager The message associated with the transaction.
      */
-    function addRegistred(
-        address _receiver,
-        uint _amount,
-        string memory _messager
-    ) public {
+    function addRegistred(address _receiver, uint256 _amount, string memory _messager) public {
         transactionCount += 1;
         register.push(Register(msg.sender, _receiver, _amount, _messager));
         require(_amount >= amountEther, "Insufficient amount of ether");
@@ -106,7 +96,7 @@ contract Transactions is Ownable {
      */
     function deleteTransaction(uint8 _index) public onlyOwner {
         require(_index < register.length, "Invalid index");
-        for (uint i = _index; i < register.length - 1; i++) {
+        for (uint256 i = _index; i < register.length - 1; i++) {
             register[i] = register[i + 1];
         }
         register.pop();
