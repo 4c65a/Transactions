@@ -12,6 +12,13 @@ import {Transactions} from "../src/Transactions.sol";
 contract TransactionsTest is Test {
     Transactions public transactions;
 
+    event transactionEvent(
+        address indexed from,
+        address indexed receiver,
+        uint256 amount,
+        string message
+    );
+
     function setUp() public {
         transactions = new Transactions(msg.sender, 100);
     }
@@ -20,7 +27,7 @@ contract TransactionsTest is Test {
     function TestGetAmountEther() public {
         uint16 expectedValue = transactions.getAmountEther();
         assertEq(expectedValue, 100, "Amount ether should match initial value");
-    } 
+    }
 
     function testAddTransactions() public {
         transactions = new Transactions(msg.sender, 10);
@@ -28,20 +35,16 @@ contract TransactionsTest is Test {
         address jonh = address(2);
         address alice = address(3);
 
-        vm.startPrank(jonh);
+        //vm.startPrank(jonh);
         vm.expectRevert("Insufficient amount of ether");
-        transactions.addTransactions(jonh,lucy, 0, "Hello Lucy");
-        vm.stopPrank();
+        transactions.addTransactions(jonh, lucy, 0, "Hello Lucy");
+        //vm.stopPrank();
 
-       
-        
-
-        vm.startPrank(alice);
-        vm.expectEmit(true, true, true,true);
-        emit Transactions.transactionEvent(alice, lucy, 100, "Hello Lucy");
-        transactions.addTransactions(alice,lucy, 100, "Hello Lucy");
-        vm.stopPrank();
-
+        //vm.startPrank(alice);
+        vm.expectEmit(true, true, true, true);
+        emit transactionEvent(alice, lucy, 100, "Hello Lucy");
+        transactions.addTransactions(alice, lucy, 100, "Hello Lucy");
+        // vm.stopPrank();
     }
 
     // Change quantities of ETH > 100 ETH to 200 ETH
@@ -54,16 +57,16 @@ contract TransactionsTest is Test {
         address lucy = address(0x1);
 
         // Simulates a transaction from the non-owner address.
-        vm.prank(lucy); 
+        vm.prank(lucy);
         bool didRevert = false;
-        
+
         try transactions.setAmountEther(200) {
             // This block should not execute as the transaction should revert.
         } catch {
             // Sets the flag to true if the transaction reverts, indicating the test passed.
             didRevert = true;
         }
-       
+
         assertTrue(didRevert, "The function should revert");
 
         vm.startPrank(address(msg.sender));
@@ -74,10 +77,44 @@ contract TransactionsTest is Test {
     }
 
     function testGetTransactions() public {
+        address lucy = address(1);
+        address alice = address(2);
+        uint16 amount = 100;
+        string memory message = "Hello Lucy";
+
+        transactions.addTransactions(alice, lucy, amount, message);
+        transactions.getTransactions(0);
+
+        vm.expectRevert("Invalid index");
+        transactions.getTransactions(1);
+    }
+
+    function testGetAllTransactions() public {
+        address lucy = address(1);
+        address alice = address(2);
+        uint16 amount = 100;
+        uint16 amount1 = 100;
+        string memory message = "Hello Lucy";
+
+        transactions.addTransactions(alice, lucy, amount, message);
+        transactions.addTransactions(alice, lucy, amount1, message);
+
+        transactions.getAllTransactions();
+
+      
 
     }
 
-    function testGetAllTransactions() public {}
+    function testDeleteTransaction() public {
+        address lucy = address(1);
+        address alice = address(2);
+        uint16 amount = 100;
+        string memory message = "Hello Lucy";
 
-    function testDeleteTransaction() public {}
+        transactions.addTransactions(alice, lucy, amount, message);
+        transactions.deleteTransaction(0);
+
+        vm.expectRevert("Invalid index");
+        transactions.deleteTransaction(1);
+    }
 }
